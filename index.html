@@ -1559,25 +1559,26 @@
       document.body.classList.add('crawling');
     }, { once: true });
 
-    // Manual audio toggle (fallback button)
-    const audioBtn  = document.getElementById('audio-btn');
-    const bgAudio   = document.getElementById('bg-audio');
-    const iconOn    = document.getElementById('icon-sound-on');
-    const iconOff   = document.getElementById('icon-sound-off');
+    // Sound toggle button
+    const audioBtn = document.getElementById('audio-btn');
+    const bgAudio  = document.getElementById('bg-audio');
+    const iconOn   = document.getElementById('icon-sound-on');
+    const iconOff  = document.getElementById('icon-sound-off');
+    let soundOn = true;
 
     function setSoundState(on) {
+      soundOn = on;
       iconOn.style.display  = on ? 'block' : 'none';
       iconOff.style.display = on ? 'none'  : 'block';
     }
 
     audioBtn.addEventListener('click', () => {
-      if (bgAudio.muted || bgAudio.paused) {
-        bgAudio.muted = false;
+      if (soundOn) {
+        bgAudio.pause();
+        setSoundState(false);
+      } else {
         bgAudio.play().catch(() => {});
         setSoundState(true);
-      } else {
-        bgAudio.muted = true;
-        setSoundState(false);
       }
     });
   </script>
@@ -1599,10 +1600,10 @@
       <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" fill="white" opacity="0.85"/>
       <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="white" opacity="0.55"/>
     </svg>
-    <!-- Sound OFF (muted) icon -->
+    <!-- Sound OFF icon: speaker + diagonal strike-through line -->
     <svg id="icon-sound-off" viewBox="0 0 24 24" fill="none" width="20" height="20" style="display:none;">
-      <path d="M3 9v6h4l5 5V4L7 9H3z" fill="white"/>
-      <path d="M19 12l2-2-1.41-1.41L18 10.59l-1.59-1.59L15 10.41 16.59 12 15 13.59l1.41 1.41L18 13.41l1.59 1.59L21 13.59 19 12z" fill="white" opacity="0.85"/>
+      <path d="M3 9v6h4l5 5V4L7 9H3z" fill="white" opacity="0.5"/>
+      <line x1="3" y1="3" x2="21" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
     </svg>
   </button>
 

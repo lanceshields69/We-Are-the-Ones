@@ -1604,7 +1604,7 @@
       crawlWrap.classList.add('active');
       document.body.classList.add('crawling');
       narratorAudio.volume = 1.0;
-      narratorAudio.play().catch(() => {});
+      setTimeout(() => narratorAudio.play().catch(() => {}), 5000);
 
       // Fade music out slowly 10s after the crawl finishes scrolling
       const crawlEl = document.getElementById('crawlText');

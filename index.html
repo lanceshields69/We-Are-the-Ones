@@ -1534,10 +1534,11 @@
       // Start audio from within this direct user-gesture call stack (browser allows it here)
       const bgAudio = document.getElementById('bg-audio');
       bgAudio.volume = 0.5;
-      bgAudio.play().catch(() => {
-        // Autoplay still blocked — show the manual button
+      bgAudio.play().catch(() => {});
+      // Show the sound button a couple seconds after music starts
+      setTimeout(() => {
         document.getElementById('audio-btn').style.opacity = '1';
-      });
+      }, 2000);
 
       // Rush the door scene toward viewer then off screen
       scene.style.animation = 'scene-rush 1.35s cubic-bezier(0.4, 0, 1, 1) both';

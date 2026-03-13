@@ -1605,6 +1605,23 @@
       document.body.classList.add('crawling');
       narratorAudio.volume = 1.0;
       narratorAudio.play().catch(() => {});
+
+      // Fade music out slowly 10s after the crawl finishes scrolling
+      const crawlEl = document.getElementById('crawlText');
+      crawlEl.addEventListener('animationend', () => {
+        setTimeout(() => {
+          const fadeDuration = 6000; // 6 second fade
+          const steps = 60;
+          const interval = fadeDuration / steps;
+          const startVol = bgAudio.volume;
+          let step = 0;
+          const fadeOut = setInterval(() => {
+            step++;
+            bgAudio.volume = Math.max(0, startVol * (1 - step / steps));
+            if (step >= steps) { clearInterval(fadeOut); bgAudio.pause(); }
+          }, interval);
+        }, 10000);
+      }, { once: true });
     }, { once: true });
 
     // Sound toggle button

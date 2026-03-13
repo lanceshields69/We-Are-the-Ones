@@ -879,7 +879,18 @@
     }
 
     #crawlWrap.active #crawlText {
-      animation: crawl-up 80s linear forwards;
+      animation: crawl-up 107s linear forwards;
+    }
+
+    /* Narrator highlight — dims all, then illuminates the active cue */
+    body.crawling #crawlText h2,
+    body.crawling #crawlText p {
+      opacity: 0.35;
+      transition: opacity 0.5s ease, text-shadow 0.5s ease;
+    }
+    body.crawling #crawlText .nar-active {
+      opacity: 1;
+      text-shadow: 0 0 28px rgba(255, 240, 180, 0.55), 0 1px 4px rgba(0,0,0,0.9);
     }
 
     @keyframes crawl-up {
@@ -1481,31 +1492,32 @@
   <div id="crawlWrap">
     <div id="crawlText">
 
-      <h2>THE ONE</h2>
+      <h2 id="cn0">THE ONE</h2>
 
-      <p>In the age before the oracles learned to speak, there were those who listened for what people could not yet say. Among them was The One, a shaper of thresholds, a cartographer of need, who came to his craft in the long years when the digital realm was young and its inhabitants still argued about whether the button should be blue.</p>
+      <p id="cn1">In the age before the oracles learned to speak, there were those who listened for what people could not yet say. Among them was The One, a shaper of thresholds, a cartographer of need, who came to his craft in the long years when the digital realm was young and its inhabitants still argued about whether the button should be blue.</p>
 
-      <p>He learned what all true craftsmen learn: that trust is not given. It is earned through ten thousand small decisions, most of them invisible, none of them celebrated.</p>
+      <p id="cn2">He learned what all true craftsmen learn: that trust is not given. It is earned through ten thousand small decisions, most of them invisible, none of them celebrated.</p>
 
-      <p>A shadow has fallen across the Kingdom of Design. The oracles multiply in the deep places. They dream in data and speak in probability, and those who fear them say the age of human judgment is ending. That the great work will soon be done without hands, without doubt, without mercy.</p>
+      <p id="cn3">A shadow has fallen across the Kingdom of Design. The oracles multiply in the deep places. They dream in data and speak in probability, and those who fear them say the age of human judgment is ending. That the great work will soon be done without hands, without doubt, without mercy.</p>
 
-      <p>But The One does not share this fear.</p>
+      <p id="cn4">But The One does not share this fear.</p>
 
-      <p>He has walked the great halls where millions pass daily and taught the oracles humility. He has built gates through which the ungifted suddenly became makers. In every kingdom he has served, the work was long, the credit was sparse, and the path forward was never marked in advance.</p>
+      <p id="cn5">He has walked the great halls where millions pass daily and taught the oracles humility. He has built gates through which the ungifted suddenly became makers. In every kingdom he has served, the work was long, the credit was sparse, and the path forward was never marked in advance.</p>
 
-      <p>He does not believe the oracles are the enemy. He believes they are unfinished. And that the finishing is the great work of this age: to build not a world where machines replace human judgment, but one where they are worthy of standing beside it.</p>
+      <p id="cn6">He does not believe the oracles are the enemy. He believes they are unfinished. And that the finishing is the great work of this age: to build not a world where machines replace human judgment, but one where they are worthy of standing beside it.</p>
 
-      <p>The One carries no map.</p>
+      <p id="cn7">The One carries no map.</p>
 
-      <p>But he has seen, on the clearest days, what lies beyond the next threshold.</p>
+      <p id="cn8">But he has seen, on the clearest days, what lies beyond the next threshold.</p>
 
-      <p>It looks something like this.</p>
+      <p id="cn9">It looks something like this.</p>
 
     </div>
   </div>
 
   <!-- Background audio (must be before the script so getElementById finds it) -->
   <audio id="bg-audio" src="audio.m4a" loop preload="auto" style="display:none;"></audio>
+  <audio id="narrator-audio" src="narrator.mp3" preload="auto" style="display:none;"></audio>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -1516,7 +1528,8 @@
     const skyFs      = document.getElementById('skyFs');
     const welcomeEl  = document.getElementById('welcomeText');
     const crawlWrap  = document.getElementById('crawlWrap');
-    const bgAudio    = document.getElementById('bg-audio');
+    const bgAudio       = document.getElementById('bg-audio');
+    const narratorAudio = document.getElementById('narrator-audio');
 
     let interacted = false;
 
@@ -1557,10 +1570,41 @@
       setTimeout(() => welcomeEl.classList.add('show'), 1850);
     });
 
-    // Step 3 — after welcome text fades, roll the crawl
+    // Narrator cue timings (seconds) — adjust these if narration timing drifts
+    const narCues = [
+      { id: 'cn0', start: 0    },  // THE ONE
+      { id: 'cn1', start: 2.5  },  // In the age before the oracles...
+      { id: 'cn2', start: 24.5 },  // He learned what all true craftsmen...
+      { id: 'cn3', start: 35.5 },  // A shadow has fallen...
+      { id: 'cn4', start: 54.0 },  // But The One does not share this fear.
+      { id: 'cn5', start: 58.0 },  // He has walked the great halls...
+      { id: 'cn6', start: 76.0 },  // He does not believe the oracles...
+      { id: 'cn7', start: 93.0 },  // The One carries no map.
+      { id: 'cn8', start: 95.5 },  // But he has seen...
+      { id: 'cn9', start: 101.5 }, // It looks something like this.
+    ];
+
+    let activeCueId = null;
+
+    narratorAudio.addEventListener('timeupdate', () => {
+      const t = narratorAudio.currentTime;
+      let currentId = null;
+      for (let i = narCues.length - 1; i >= 0; i--) {
+        if (t >= narCues[i].start) { currentId = narCues[i].id; break; }
+      }
+      if (currentId !== activeCueId) {
+        if (activeCueId) document.getElementById(activeCueId)?.classList.remove('nar-active');
+        if (currentId)   document.getElementById(currentId)?.classList.add('nar-active');
+        activeCueId = currentId;
+      }
+    });
+
+    // Step 3 — after welcome text fades, roll the crawl and start narrator
     welcomeEl.addEventListener('animationend', () => {
       crawlWrap.classList.add('active');
       document.body.classList.add('crawling');
+      narratorAudio.volume = 1.0;
+      narratorAudio.play().catch(() => {});
     }, { once: true });
 
     // Sound toggle button

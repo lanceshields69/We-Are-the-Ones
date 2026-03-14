@@ -879,7 +879,7 @@
     }
 
     #crawlWrap.active #crawlText {
-      animation: crawl-up 128s forwards;
+      animation: crawl-up 136s linear forwards;
     }
 
     /* Narrator highlight — dims all, then illuminates the active cue */
@@ -894,14 +894,10 @@
     }
 
     @keyframes crawl-up {
-      /* First 40% of time: linear, covers first half of distance */
-      from { transform: translateX(-50%) translateY(0);
-             animation-timing-function: linear; }
-      /* Second half of distance: ease-out to a slow stop at screen centre */
-      40%  { transform: translateX(-50%) translateY(calc(-50% - 25vh));
-             animation-timing-function: cubic-bezier(0.4, 0, 0.05, 1); }
-      /* End: last line sits at screen centre (50vh short of fully off-screen) */
-      to   { transform: translateX(-50%) translateY(calc(-100% - 50vh)); }
+      from  { transform: translateX(-50%) translateY(0); }
+      /* Midpoint: first half done at original speed; second half is 15% slower */
+      46.3% { transform: translateX(-50%) translateY(calc(-50% - 50vh)); }
+      to    { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
     }
 
     /* ───── SKY CREATURES ───── */

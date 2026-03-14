@@ -900,6 +900,102 @@
       to    { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
     }
 
+    /* ───── END LINKS ───── */
+    #end-links {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      z-index: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2.5s ease;
+    }
+    #end-links.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #end-links a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-style: italic;
+      font-weight: 300;
+      color: white;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-shadow: 0 1px 10px rgba(0,0,0,0.55);
+      transition: opacity 0.3s ease;
+    }
+    #end-links a:hover { opacity: 0.65; }
+    #end-links .divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ───── BUILT MODAL ───── */
+    #built-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    #built-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #built-modal {
+      background: rgba(255,255,255,0.91);
+      border-radius: 10px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.22), 0 2px 12px rgba(0,0,0,0.12);
+      max-width: 680px;
+      width: 90%;
+      max-height: 82vh;
+      overflow-y: auto;
+      padding: 3rem 3.2rem 2.8rem;
+      position: relative;
+      font-family: 'Cormorant Garamond', serif;
+      color: #1c1c1c;
+    }
+    #built-modal h1 {
+      font-size: 1.9rem;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.02em;
+      margin: 0 0 1.6rem;
+      line-height: 1.2;
+    }
+    #built-modal p {
+      font-size: 1.08rem;
+      line-height: 1.8;
+      font-weight: 300;
+      margin: 0 0 1.1em;
+      color: #2a2a2a;
+    }
+    #built-modal p:last-child { margin-bottom: 0; }
+    #built-close {
+      position: absolute;
+      top: 1.1rem;
+      right: 1.3rem;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      line-height: 1;
+      color: #888;
+      cursor: pointer;
+      padding: 0;
+    }
+    #built-close:hover { color: #222; }
+
     /* ───── SKY CREATURES ───── */
     /* ───── BIRDS ───── */
     #sky-creatures {
@@ -1608,7 +1704,7 @@
       narratorAudio.volume = 1.0;
       setTimeout(() => narratorAudio.play().catch(() => {}), 5000);
 
-      // Fade text + music out 15s before scroll finishes (136s total → trigger at 121s)
+      // Fade text + music out 25s before scroll finishes (136s total → trigger at 111s)
       setTimeout(() => {
         const crawlText = document.getElementById('crawlText');
         crawlText.style.transition = 'opacity 8s ease';
@@ -1622,9 +1718,31 @@
           bgAudio.volume = Math.max(0, startVol * (1 - step / steps));
           if (step >= steps) { clearInterval(fadeOut); bgAudio.pause(); }
         }, 8000 / steps);
+
+        // Show end links 2s after fade completes (8s fade + 2s buffer = 10s)
+        setTimeout(() => {
+          document.getElementById('end-links').classList.add('visible');
+        }, 10000);
       }, 111000);
 
     }, { once: true });
+
+    // End links
+    document.getElementById('link-return').addEventListener('click', e => {
+      e.preventDefault();
+      location.reload();
+    });
+    const builtOverlay = document.getElementById('built-overlay');
+    document.getElementById('link-built').addEventListener('click', e => {
+      e.preventDefault();
+      builtOverlay.classList.add('visible');
+    });
+    document.getElementById('built-close').addEventListener('click', () => {
+      builtOverlay.classList.remove('visible');
+    });
+    builtOverlay.addEventListener('click', e => {
+      if (e.target === builtOverlay) builtOverlay.classList.remove('visible');
+    });
 
     // Sound toggle button
     const audioBtn = document.getElementById('audio-btn');
@@ -1649,6 +1767,29 @@
     });
   }); // end DOMContentLoaded
   </script>
+
+  <!-- Post-crawl end links -->
+  <div id="end-links">
+    <a href="#" id="link-return">Return Through the Door</a>
+    <div class="divider"></div>
+    <a href="#" id="link-built">Built With Words Alone</a>
+  </div>
+
+  <!-- Built With Words Alone modal -->
+  <div id="built-overlay">
+    <div id="built-modal">
+      <button id="built-close" title="Close">✕</button>
+      <h1>Built With Words Alone.</h1>
+      <p>This project started as a question: could I build a fully realized interactive art experience without ever opening a design tool?</p>
+      <p>No Figma. No wireframes. No mockups. Just conversation, iteration, and trust in the process.</p>
+      <p>The entire experience was built through vibe coding, describing what I wanted in plain language and letting the code emerge from dialogue. I used Cursor with Claude Sonnet 4.6 as my collaborator, working in an iterative loop where each prompt refined the last. The door, the sky, the read-along scroll, the creatures, the sunrise. All of it built without writing a single line of code directly.</p>
+      <p>The story was written in collaboration with Claude, starting from my own bio and pushed toward something more mythic. A Tolkien register, a dystopian undercurrent, a hopeful ending. We went through a dozen drafts before it felt right.</p>
+      <p>The music is by I Am Robot and Proud. The narration was generated using ElevenLabs, a mature British female voice named Jane, chosen deliberately for gravitas without pomposity.</p>
+      <p>The final product, audio aside, is a single HTML file. 76 kilobytes. Two minutes long. Built in half a day. The traditional version would have required design, writing, development, recording, licensing, and integration. A week, maybe two, and a team.</p>
+      <p>The door was always there.</p>
+      <p>I just had to imagine and describe it.</p>
+    </div>
+  </div>
 
   <!-- Sound toggle button — fades in when music starts -->
   <button id="audio-btn" title="Toggle sound" style="

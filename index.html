@@ -879,7 +879,7 @@
     }
 
     #crawlWrap.active #crawlText {
-      animation: crawl-up 117s linear forwards;
+      animation: crawl-up 126s linear forwards;
     }
 
     /* Narrator highlight — dims all, then illuminates the active cue */
@@ -894,8 +894,10 @@
     }
 
     @keyframes crawl-up {
-      from { transform: translateX(-50%) translateY(0); }
-      to   { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
+      from  { transform: translateX(-50%) translateY(0); }
+      /* At ~81s the last big paragraph begins — scroll slows 25% from here */
+      64.3% { transform: translateX(-50%) translateY(calc(-69.2% - 69.2vh)); }
+      to    { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
     }
 
     /* ───── SKY CREATURES ───── */

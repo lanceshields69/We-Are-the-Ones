@@ -1145,23 +1145,27 @@
       filter: invert(1);
       opacity: 0.7;
     }
-    /* Balloon 1 — left half, bottom→top, twice bird speed (17.5s), starts 1/4 through story (34s) */
+    /* Balloon cycle: rise (17.5s) + 10s + fall (17.5s) + 10s = 55s, then repeat */
+    /* Balloon 1 — left half, bottom→top, 55s cycle, starts 1/4 through story (34s) */
     #balloon-1 { left: 15%; top: 0; }
-    body.crawling #balloon-1 { animation: balloon1-rise 17.5s linear forwards 34s; }
+    body.crawling #balloon-1 { animation: balloon1-rise 55s linear infinite 34s; }
     @keyframes balloon1-rise {
       0%    { transform: translateY(100vh);           opacity: 0; }
-      5%    { transform: translateY(calc(95vh));     opacity: 0.65; }
-      95%   { transform: translateY(calc(-130px));   opacity: 0.65; }
+      4%    { transform: translateY(calc(95vh));     opacity: 0.65; }
+      28%   { transform: translateY(calc(-130px));   opacity: 0.65; }
+      32%   { transform: translateY(calc(-130px));   opacity: 0; }
       100%  { transform: translateY(calc(-130px));   opacity: 0; }
     }
-    /* Balloon 2 — right half, top→bottom, same speed (17.5s), starts 10s after balloon 1 finishes (62s) */
+    /* Balloon 2 — right half, top→bottom, 55s cycle, starts 10s after balloon 1 finishes (62s) */
     #balloon-2 { right: 15%; top: 0; }
-    body.crawling #balloon-2 { animation: balloon2-fall 17.5s linear forwards 62s; }
+    body.crawling #balloon-2 { animation: balloon2-fall 55s linear infinite 62s; }
     @keyframes balloon2-fall {
       0%    { transform: translateY(-130px);         opacity: 0; }
-      5%    { transform: translateY(calc(-5vh));     opacity: 0.65; }
-      95%   { transform: translateY(calc(95vh));     opacity: 0.65; }
-      100%  { transform: translateY(100vh);         opacity: 0; }
+      50%   { transform: translateY(-130px);         opacity: 0; }
+      54%   { transform: translateY(calc(-5vh));     opacity: 0.65; }
+      78%   { transform: translateY(calc(95vh));     opacity: 0.65; }
+      82%   { transform: translateY(100vh);          opacity: 0; }
+      100%  { transform: translateY(100vh);          opacity: 0; }
     }
 
     /* Bird 1 — right→left, 80px, cycle 35s, delay 0s */

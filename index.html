@@ -1156,9 +1156,9 @@
       32%   { transform: translateY(calc(-130px));   opacity: 0; }
       100%  { transform: translateY(calc(-130px));   opacity: 0; }
     }
-    /* Balloon 2 — right half, top→bottom, 55s cycle, starts 10s after balloon 1 finishes (62s) */
+    /* Balloon 2 — right half, top→bottom, same 55s cycle, offset 27.5s (rise+10s) so fall happens after rise */
     #balloon-2 { right: 15%; top: 0; }
-    body.crawling #balloon-2 { animation: balloon2-fall 55s linear infinite 62s; }
+    body.crawling #balloon-2 { animation: balloon2-fall 55s linear infinite 34s; }
     @keyframes balloon2-fall {
       0%    { transform: translateY(-130px);         opacity: 0; }
       50%   { transform: translateY(-130px);         opacity: 0; }

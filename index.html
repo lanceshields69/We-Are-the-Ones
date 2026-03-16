@@ -1817,9 +1817,11 @@
         const DESKTOP_PX_PER_SEC = 15.4;
         crawlDuration = Math.round((textH + vhPx) / DESKTOP_PX_PER_SEC);
         crawlText.style.animationDuration = crawlDuration + 's';
-        // On mobile "The One" enters from the bottom and barely moves in 5s.
-        // Wait until it has scrolled ~40% up the screen before starting narration.
-        narDelay = Math.round(vhPx * 0.4 / DESKTOP_PX_PER_SEC) * 1000;
+        // Start text at 60% down the screen so "The One" is visible immediately
+        // instead of scrolling up from off-screen bottom (which takes too long).
+        crawlText.style.top = '60%';
+        // Narrator starts 6s after crawl begins — text is already on screen by then.
+        narDelay = 6000;
       }
 
       narratorAudio.volume = 1.0;

@@ -890,14 +890,14 @@
       #crawlText { width: 80%; }
       .welcome-text { white-space: normal; width: 80%; text-align: center; }
 
-      /* Speed up the second half of the crawl by 15% on mobile so the final
-         lines stay on screen during narration. First half unchanged (0→46.3%).
-         Second half completes at 93% of total time (46.7% instead of 53.7%),
-         then holds at the end position for the remaining 7%. */
+      /* Mobile crawl: normal speed through the first half (0→46.3%) and into
+         cn5. At 52% (~one paragraph before "He does not believe...") the scroll
+         speeds up 15%. Endpoint reached at 94% then holds to 100%. */
       @keyframes crawl-up {
         from  { transform: translateX(-50%) translateY(0); }
         46.3% { transform: translateX(-50%) translateY(calc(-50% - 50vh)); }
-        93%   { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
+        52%   { transform: translateX(-50%) translateY(calc(-55.3% - 55.3vh)); }
+        94%   { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
         to    { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
       }
     }

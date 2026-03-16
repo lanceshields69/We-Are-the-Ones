@@ -1809,6 +1809,7 @@
       // than the narrator. Fix: measure actual text height and scale the duration so px/sec
       // stays constant. Desktop is untouched (guard on innerWidth).
       let crawlDuration = 136; // default (desktop)
+      let narDelay = 5000;    // default (desktop)
       if (window.innerWidth <= 600) {
         const textH = crawlText.scrollHeight;
         const vhPx  = window.innerHeight;
@@ -1816,10 +1817,13 @@
         const DESKTOP_PX_PER_SEC = 15.4;
         crawlDuration = Math.round((textH + vhPx) / DESKTOP_PX_PER_SEC);
         crawlText.style.animationDuration = crawlDuration + 's';
+        // On mobile "The One" enters from the bottom and barely moves in 5s.
+        // Wait until it has scrolled ~40% up the screen before starting narration.
+        narDelay = Math.round(vhPx * 0.4 / DESKTOP_PX_PER_SEC) * 1000;
       }
 
       narratorAudio.volume = 1.0;
-      setTimeout(() => narratorAudio.play().catch(() => {}), 5000);
+      setTimeout(() => narratorAudio.play().catch(() => {}), narDelay);
 
       // Fade text + music out 25s before scroll finishes
       setTimeout(() => {

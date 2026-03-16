@@ -888,6 +888,17 @@
 
     @media (max-width: 600px) {
       #crawlText { width: 80%; }
+
+      /* Speed up the second half of the crawl by 15% on mobile so the final
+         lines stay on screen during narration. First half unchanged (0→46.3%).
+         Second half completes at 93% of total time (46.7% instead of 53.7%),
+         then holds at the end position for the remaining 7%. */
+      @keyframes crawl-up {
+        from  { transform: translateX(-50%) translateY(0); }
+        46.3% { transform: translateX(-50%) translateY(calc(-50% - 50vh)); }
+        93%   { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
+        to    { transform: translateX(-50%) translateY(calc(-100% - 100vh)); }
+      }
     }
 
     #crawlText h2 {

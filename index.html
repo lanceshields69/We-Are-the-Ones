@@ -886,6 +886,10 @@
         0 0  30px rgba(0, 10, 50, 0.2);
     }
 
+    @media (max-width: 600px) {
+      #crawlText { width: 80%; }
+    }
+
     #crawlText h2 {
       font-family: 'Cormorant Garamond', serif;
       font-style: normal;
@@ -1744,6 +1748,9 @@
       // Start audio from within this direct user-gesture call stack (browser allows it here)
       bgAudio.volume = 0.5;
       bgAudio.play().catch(() => {});
+      // Unlock narrator on mobile (iOS/Android require play() inside a user gesture)
+      narratorAudio.volume = 0;
+      narratorAudio.play().then(() => { narratorAudio.pause(); narratorAudio.currentTime = 0; narratorAudio.volume = 1.0; }).catch(() => {});
       // Show the sound button a couple seconds after music starts
       setTimeout(() => {
         document.getElementById('audio-btn').style.opacity = '1';

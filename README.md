@@ -5,5 +5,6 @@ An interactive art experience built entirely through vibe coding — no design t
 https://www.wearetheones.art
 
 ![preview](./we-are-the-one-1.png)
+![preview](./we-are-the-one-1b.jpg)
 ![preview](./we-are-the-one-2.jpg)
 ![preview](./we-are-the-one-3.jpg)
